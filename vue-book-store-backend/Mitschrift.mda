@@ -1,0 +1,6 @@
+=== Express 
+is a Node framework for web applications, which will provide useful abstractions for handling API requests. 
+=== Concurrently
+ will be used to run the Express back-end server and the Vue.js development server simulteneously.
+=== body-parser
+ is an Express middleware that will parse requests to your API.

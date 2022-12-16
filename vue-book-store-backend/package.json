@@ -1,0 +1,21 @@
+{
+  "name": "vue-book-store-backend",
+  "version": "1.0.0",
+  "description": "The Backend Store",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Alexander Böhm, Alina König, Marc Siggelkow",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "concurrently": "^7.6.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.27.0"
+  }
+}

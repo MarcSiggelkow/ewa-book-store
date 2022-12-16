@@ -1,0 +1,125 @@
+//Express is for building the Rest apis
+const express = require('express');
+//body-parser helps to parse the request and create the req.body object
+const bodyParser = require('body-parser');
+//cors provides Express middleware to enable CORS with various options.
+const cors = require("cors");
+// fs module to write to your filesystem
+const fs = require('fs');
+// path module to make defining filepaths easier
+const path = require('path');
+//  initialize the Express app and save references to your JSON files as PRODUCT_DATA_FILE and CART_DATA_FILE
+const app = express();
+const PRODUCT_DATA_FILE = path.join(__dirname, 'server-product-data.json');
+const CART_DATA_FILE = path.join(__dirname, 'server-cart-data.json');
+
+// Create Express server, set port, create middleware to set response headers
+app.set('port', (process.env.PORT || 3000));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use((req, res, next) => {
+    //The setHeader method sets the header of the HTTP responses
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
+
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
+
+// create an API endpoint that our frontend will query
+
+/* API Endpoint "/cart"
+ * receives the request object containing the cart items from the frontend and stores them 
+ * in the server-cart-data.json file in the root of our project
+ * Products here are JavaScript objects with 
+ * 
+ * id, 
+ * title, 
+ * description, 
+ * price, 
+ * image_tag, 
+ * and quantity properties.
+ * 
+ * The code also checks if the cart already exists to ensure that requests for a repeated product only increase the quantity
+ */
+  app.post('/cart', (req, res) => {
+    fs.readFile(CART_DATA_FILE, (err, data) => {
+      const cartProducts = JSON.parse(data);
+      const newCartProduct = { 
+        id: req.body.id,
+        title: req.body.title,
+        description: req.body.description,
+        price: req.body.price,
+        image_tag: req.body.image_tag, 
+        quantity: 1 
+      };
+      let cartProductExists = false;
+      cartProducts.map((cartProduct) => {
+        if (cartProduct.id === newCartProduct.id) {
+          cartProduct.quantity++;
+          cartProductExists = true;
+        }
+      });
+      if (!cartProductExists) cartProducts.push(newCartProduct);
+      fs.writeFile(CART_DATA_FILE, JSON.stringify(cartProducts, null, 4), () => {
+        res.setHeader('Cache-Control', 'no-cache');
+        res.json(cartProducts);
+      });
+    });
+  });
+
+  /* API Endpoint "/cart/delete"
+   * This code receives the request object containing the item to be removed from the cart and checks the server-cart-data.json file for this item via its id
+   * If it exists and the quantity is greater than one, then the quantity of the item in the cart is deducted. Otherwise, if the item’s quantity is less than 1, 
+   * it will be removed from the cart and the remaining items will be stored in the server-cart-data.json file.
+  */
+  app.delete('/cart/delete', (req, res) => {
+    fs.readFile(CART_DATA_FILE, (err, data) => {
+      let cartProducts = JSON.parse(data);
+      cartProducts.map((cartProduct) => {
+        if (cartProduct.id === req.body.id && cartProduct.quantity > 1) {
+          cartProduct.quantity--;
+        } else if (cartProduct.id === req.body.id && cartProduct.quantity === 1) {
+          const cartIndexToRemove = cartProducts.findIndex(cartProduct => cartProduct.id === req.body.id);
+          cartProducts.splice(cartIndexToRemove, 1);
+        }
+      });
+      fs.writeFile(CART_DATA_FILE, JSON.stringify(cartProducts, null, 4), () => {
+        res.setHeader('Cache-Control', 'no-cache');
+        res.json(cartProducts);
+      });
+    });
+  });
+
+  /* API Endpoint "/cart/delete/all"
+   * This code is responsible for removing all the items from the cart by returning an empty array.
+  */
+  app.delete('/cart/delete/all', (req, res) => {
+    fs.readFile(CART_DATA_FILE, () => {
+      let emptyCart = [];
+      fs.writeFile(CART_DATA_FILE, JSON.stringify(emptyCart, null, 4), () => {
+        res.json(emptyCart);
+      });
+    });
+  });
+
+  app.get('/products', (req, res) => {
+    fs.readFile(PRODUCT_DATA_FILE, (err, data) => {
+      res.setHeader('Cache-Control', 'no-cache');
+      res.json(JSON.parse(data));
+    });
+  });
+
+app.listen(app.get('port'), () => {
+  console.log(`Find the server at: http://localhost:${app.get('port')}/`);
+});
+
+app.listen(app.get('port'), () => {
+  console.log(`Find the server at: http://localhost:${app.get('port')}/`);
+});
