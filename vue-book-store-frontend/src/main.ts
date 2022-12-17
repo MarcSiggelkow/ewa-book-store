@@ -1,11 +1,39 @@
+import PortalVue from 'portal-vue'
 import { createApp } from 'vue'
 import App from './App.vue'
 import './registerServiceWorker'
 import router from './router'
 import store from './store'
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-// Import Bootstrap and BootstrapVue CSS files (order is important)
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-createApp(App).use(store).use(router).mount('#app')
+// Vuetify
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
+// Icon Set - Mdi + Font aw
+import { aliases, fa } from 'vuetify/iconsets/fa'
+import { mdi } from 'vuetify/iconsets/mdi'
+
+export default createVuetify({
+  icons: {
+    defaultSet: 'fa',
+    aliases,
+    sets: {
+      fa,
+      mdi
+    }
+  }
+})
+
+const vuetify = createVuetify({
+  components,
+  directives
+})
+
+createApp(App)
+  .use(store)
+  .use(PortalVue)
+  .use(router)
+  .use(vuetify)
+  .mount('#app')

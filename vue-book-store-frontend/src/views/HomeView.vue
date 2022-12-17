@@ -1,15 +1,14 @@
 <template>
   <div>
-    <h1>Herzlich Willkommen im Store</h1>
-    <Product />
+    <Carousel />
   </div>
 </template>
 
 <script>
-import Product from '../components/ProductList.vue'
+import Carousel from '../components/HomePage/HeroCarousel.vue'
 export default {
   components: {
-    Product
+    Carousel
   }
 }
 </script>

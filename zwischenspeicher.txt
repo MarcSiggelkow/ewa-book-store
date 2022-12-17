@@ -123,3 +123,114 @@ app.listen(app.get('port'), () => {
 app.listen(app.get('port'), () => {
   console.log(`Find the server at: http://localhost:${app.get('port')}/`);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+          <li><router-link to="/">Home</router-link></li>
+          <li><router-link to="/shop">Shop</router-link></li>
+          <li><router-link to="/faq">FAQ</router-link></li>
+        </ul>
+      </nav>
+
+      <img alt="Logo" src="../assets/Logo-main.png">
+
+      <nav>
+        <ul>
+          <li><router-link to="/blog">Blog</router-link></li>
+          <li><router-link to="/about">Über uns</router-link></li>
+          <li><router-link to="/contact">Kontakt</router-link></li>
+
+
+
+
+
+
+
+
+
+          <!-- eslint-disable vue/no-deprecated-slot-scope-attribute -->
+<template>
+  <v-container>
+    <h2 class="display-2 mb-4">Hot products showing</h2>
+
+    <v-layout row wrap>
+      <template v-for="item in products" :key="item.ProduktID">
+        <v-flex xs2 pa-1>
+          <v-hover>
+            <v-card slot-scope="{hover}" class="mx-auto" color="gray lighten-4" max-width="600" height="350">
+              <v-img :src="item.LinkGrafikdatei" :aspect-ratio="16/9">
+                <v-expand-transition>
+                  <div v-if="hover" class="d-flex transition-fast-in-fast-out orange draken-2 display-3 v-card--reveal display3 black--text" style="height: 100%;">
+                    {{(item.PreisNetto) * (1 + (item.Mwstsatz/100)).toFixed(2)}} €
+                  </div>
+                </v-expand-transition>
+              </v-img>
+
+              <v-card-text class="pt-4" style="position: relative;">
+                <v-btn absolute color="orange" class="white--text" fab medium right top>
+                  <v-icon>shopping_cart</v-icon>
+                </v-btn>
+
+                <div class="font-weight-light grey--text title mb-2">{{item.Genre}}</div>
+                <h3 class="display-1 font-weight-light orange--text mb-2">{{item.Produkttitel.substring(0,10)}}</h3>
+
+                <div class="font-weight-light mb-2">{{item.Kurzinhalt.substring(0,25)}}</div>
+              </v-card-text>
+            </v-card>
+          </v-hover>
+        </v-flex>
+      </template>
+    </v-layout>
+  </v-container>
+</template>
+
+<script>
+// import axios
+import axios from 'axios'
+export default {
+  // eslint-disable-next-line vue/multi-word-component-names
+  name: 'ProductList',
+  data () {
+    return {
+      products: []
+    }
+  },
+  methods: {
+    // Get All Products
+    async getProducts () {
+      try {
+        const response = await axios.get('http://localhost:5000/products')
+        this.items = response.data
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  },
+  mounted () {
+    this.getProducts()
+  }
+}
+</script>
+
+<style scoped>
+.v-card--reveal {
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  opacity: 0.5;
+  position: absolute;
+  width: 100%;
+}
+.v-card h3.display-1 {
+  font-size: 24px !important;
+}
+</style>

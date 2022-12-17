@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Contact from '../views/ContactView.vue'
+import Shop from '../views/ShopView.vue'
 import PageNotFoundView from '@/views/PageNotFoundView.vue'
-import Create from '../components/AddProduct.vue'
-import Edit from '../components/EditProduct.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -25,14 +24,9 @@ const routes: Array<RouteRecordRaw> = [
     component: Contact
   },
   {
-    name: 'Create',
-    path: '/create',
-    component: Create
-  },
-  {
-    name: 'Edit',
-    path: '/edit/:id',
-    component: Edit
+    path: '/shop',
+    name: 'Shop',
+    component: Shop
   },
   {
     path: '/:catchAll(.*)*',
