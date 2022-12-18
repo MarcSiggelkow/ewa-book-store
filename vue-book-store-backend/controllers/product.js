@@ -1,10 +1,21 @@
 // Import function from Product Model
 
-import { getProducts, getProductById, insertProduct, updateProductById, deleteProductById } from "../models/productModel.js";
+import { getProducts, getRecentlyProducts, getProductById, insertProduct, updateProductById, deleteProductById } from "../models/productModel.js";
 
 // Get All Products
 export const showProducts = (req, res) => {
     getProducts((err, results) => {
+        if (err){
+            res.send(err);
+        }else{
+            res.json(results);
+        }
+    });
+}
+
+// Get recently added Products
+export const showRecentlyProducts = (req, res) => {
+    getRecentlyProducts((err, results) => {
         if (err){
             res.send(err);
         }else{

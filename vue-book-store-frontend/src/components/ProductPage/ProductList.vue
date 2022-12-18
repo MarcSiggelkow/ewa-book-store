@@ -1,81 +1,184 @@
 <template>
-  <div class="container mx-auto">
-    <v-container fluid>
-      <v-row dense>
-        <v-col v-for="item in products" :key="item.ProduktID " cols="12" xs="6" sm="4" md="3" lg="2">
-          <v-skeleton-loader v-if="loadingProducts" type="image"></v-skeleton-loader>
-          <v-card v-else>
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title class="headline">
-                  <h6>{{item.Produkttitel}}</h6>
-                </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-            <v-img :src="item.LinkGrafikdatei" class="white--text align-end" height="200px"></v-img>
+  <v-container>
+    <v-row>
+      <v-text-field
+            outlined
+            label="Suche"
+            v-model="searchQuery"
+            placeholder="Suche nach Produkt"
+            prepend-inner-icon="mdi-magnify"
+            @input="search"
+          ></v-text-field>
+    </v-row>
+    <v-expansion-panels>
+      <v-expansion-panel>
+        <v-expansion-panel-header>Genre</v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <v-row>
+            <v-col v-for="genre in products" :key="genre.Genre" cols="2">
+              <v-checkbox
+                v-model="selected"
+                :label=genre.Genre
+                :value=genre.Genre
+                class="shrink mr-0 mt-0"
+              ></v-checkbox>
+            </v-col>
+          </v-row>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
+        <v-row>
+          <v-col
+            v-for="item in searchResults"
+            :key="item.ProduktID"
+            xl="2"
+            lg="6"
+            md="6"
+            sm="6"
+            sx="12"
+            fluid
+          >
+            <v-card
+            v-if="item.Lagerbestand > 1" :disabled="false"
+            elevation="7"
+            outlined>
+              <v-img
+              class="white--text align-end"
+              height="200px"
+              :src="item.LinkGrafikdatei"
+              >
+            </v-img>
+
+            <v-card-title v-text="item.Produkttitel"></v-card-title>
+
+            <v-card-text>
+            <v-row
+              align="center"
+              class="mx-0"
+            >
+              <v-rating
+                :value="5"
+                color="amber"
+                dense
+                half-increments
+                readonly
+                size="14"
+              ></v-rating>
+
+              <div class="grey--text ms-4">
+                {{Math.floor(Math.random() * (5 - 3 + 1) + 3)}} ({{Math.floor(Math.random() * (1000 - 200 + 1) + 200)}})
+              </div>
+            </v-row>
+
+            <div class="my-4 text-subtitle-1">
+              {{item.PreisNetto}} € • Genre: {{item.Genre}}
+            </div>
+            <div><b><u>Leseprobe:</u></b></div>
+            <div>{{(item.Kurzinhalt).substring(0,100)}}...</div>
+            </v-card-text>
+
             <v-card-actions>
-              <v-chip class="mr-2" color="green darken-1" dark>
-                {{parseInt(item.PreisNetto).toFixed(2)}}
-                <v-icon right small>mdi-currency-eur</v-icon>
-              </v-chip>
-              <v-spacer></v-spacer>
-              <v-btn icon v-on:click="addToCart(item)">
-                <v-icon>mdi-cart-plus</v-icon>
+              <v-btn
+                color="green"
+                outlined
+              >
+                Kaufen
               </v-btn>
+
+              <v-btn
+                color="green lighten-4"
+                text
+                @click="snackbar = true"
+              >
+                Zum Warenkorb
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+          <!-- Else tree if we ran out of Stock -> disable card-->
+          <v-card
+            v-else :disabled="true"
+            elevation="7"
+            outlined>
+              <v-img
+              class="white--text align-end"
+              height="200px"
+              :src="item.LinkGrafikdatei"
+              >
+            </v-img>
+
+            <v-card-title v-text="item.Produkttitel"></v-card-title>
+
+            <v-card-text>
+            <v-row
+              align="center"
+              class="mx-0"
+            >
+              <v-rating
+                :value="4.5"
+                color="amber"
+                dense
+                half-increments
+                readonly
+                size="14"
+              ></v-rating>
+
+              <div class="grey--text ms-4">
+                4.5 (413)
+              </div>
+            </v-row>
+
+            <div class="my-4 text-subtitle-1">
+              {{item.PreisNetto}} € • Genre: {{item.Genre}}
+            </div>
+            <div><b><u>Leseprobe:</u></b></div>
+            <div>{{(item.Kurzinhalt).substring(0,100)}}...</div>
+            </v-card-text>
+
+            <v-card-actions>
+              <div>Kein Bestand!</div>
             </v-card-actions>
           </v-card>
         </v-col>
       </v-row>
-      <v-fab-transition>
-        <v-btn
-          fab
-          color="blue darken-1"
-          v-scroll="onScrollBtn"
-          v-show="showBtnScrollUp"
-          @click="goToTop"
-          dark
-          fixed
-          right
-          bottom
-        >
-          <v-icon>mdi-arrow-up-bold</v-icon>
-        </v-btn>
-      </v-fab-transition>
-      <v-snackbar v-model="snackbar.visible" bottom :timeout="snackbar.timeout">
-        {{ snackbar.text }}
-      </v-snackbar>
     </v-container>
-  </div>
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="timeout"
+    >
+      {{ text }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="blue"
+          text
+          v-bind="attrs"
+          @click="snackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
 </template>
 
 <script>
 import axios from 'axios'
+
 export default {
   name: 'ProductList',
   data: () => {
     return {
+      searchQuery: '',
+      snackbar: false,
+      text: 'Zum Warenkorb hinzugefügt',
+      timeout: 2000,
+      counter: 0,
       products: [],
-      loadingProducts: true,
-      cart: [],
-      showBtnScrollUp: false,
-      snackbar: {
-        visible: false,
-        timeout: 700,
-        text: ''
-      }
-    }
-  },
-  watch: {
-    cart: function () {
-      this.$emit('addCart', this.cart)
+      searchResults: [],
+      selected: []
     }
   },
   mounted: function () {
     this.getProducts()
-    this.cart = localStorage.getItem('cart')
-      ? JSON.parse(localStorage.getItem('cart'))
-      : []
-    setTimeout(() => (this.loadingProducts = false), 2000)
   },
   methods: {
     // Get All Products
@@ -83,40 +186,17 @@ export default {
       try {
         const response = await axios.get('http://localhost:5000/products')
         this.products = response.data
+        // Initial fill searchResults with input
+        this.searchResults = this.products
       } catch (err) {
         console.log(err)
       }
     },
-    goToTop: function () {
-      this.$vuetify.goTo(0)
-    },
-    onScrollBtn: function (event) {
-      this.showBtnScrollUp =
-        (window.pageYOffset || event.target.scrollTop || 0) > 40
-    },
-    productAddedMessage: function () {
-      this.snackbar.visible = true
-      this.snackbar.text = 'Produkt zum Warenkorb hinzugefügt'
-    },
-    addToCart: function (item) {
-      const indexProduct = this.cart.findIndex(p => p.ProduktID === item.ProduktID)
-      if (indexProduct > -1) {
-        const tempProduct = this.cart[indexProduct]
-        this.cart.splice(indexProduct, 1)
-        tempProduct.quantity++
-        this.cart.push(tempProduct)
-      } else {
-        item.quantity = 1
-        this.cart.push(item)
-      }
-      this.productAddedMessage()
+    search () {
+      this.searchResults = this.products.filter(product => {
+        return product.Produkttitel.toLowerCase().includes(this.searchQuery.toLowerCase())
+      })
     }
   }
 }
 </script>
-
-<style>
-.v-skeleton-loader__image {
-  height: 308px;
-}
-</style>
