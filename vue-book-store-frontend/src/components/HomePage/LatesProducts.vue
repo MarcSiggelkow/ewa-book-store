@@ -1,7 +1,6 @@
 <template>
 <v-container>
     <v-row>
-
         <v-card
             class="d-flex align-center justify-center pa-4 mx-auto"
             max-width="550"
@@ -14,7 +13,7 @@
         </v-card>
     </v-row>
     <v-row align="center"
-      justify="center">>
+      justify="center">
           <v-col
             v-for="item in latest"
             :key="item.ProduktID"

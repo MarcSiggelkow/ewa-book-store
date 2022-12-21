@@ -10,23 +10,29 @@
             @input="search"
           ></v-text-field>
     </v-row>
-    <v-expansion-panels>
-      <v-expansion-panel>
-        <v-expansion-panel-header>Genre</v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-row>
-            <v-col v-for="genre in products" :key="genre.Genre" cols="2">
-              <v-checkbox
-                v-model="selected"
-                :label=genre.Genre
-                :value=genre.Genre
-                class="shrink mr-0 mt-0"
-              ></v-checkbox>
-            </v-col>
-          </v-row>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
+    <v-combobox
+    v-model="chips"
+    :items="items"
+    chips
+    clearable
+    label="Filter Genre"
+    multiple
+    prepend-icon="mdi-filter-variant"
+    variant="solo"
+  >
+    <template v-slot:selection="{ attrs, item, select, selected }">
+      <v-chip
+        v-bind="attrs"
+        :model-value="selected"
+        closable
+        @click="select"
+        @click:close="remove(item)"
+      >
+        <strong>{{ item }}</strong>&nbsp;
+        <span>(interest)</span>
+      </v-chip>
+    </template>
+  </v-combobox>
         <v-row>
           <v-col
             v-for="item in searchResults"
@@ -73,6 +79,9 @@
             <div class="my-4 text-subtitle-1">
               {{item.PreisNetto}} € • Genre: {{item.Genre}}
             </div>
+            <div class="my-4 text-subtitle-1">
+              SKU: {{item.Produktcode}}
+            </div>
             <div><b><u>Leseprobe:</u></b></div>
             <div>{{(item.Kurzinhalt).substring(0,100)}}...</div>
             </v-card-text>
@@ -88,7 +97,7 @@
               <v-btn
                 color="green lighten-4"
                 text
-                @click="snackbar = true"
+                v-on:click="addToCart(item)"
               >
                 Zum Warenkorb
               </v-btn>
@@ -158,11 +167,87 @@
         </v-btn>
       </template>
     </v-snackbar>
+<v-row><h1>Ich bin der Warenkorb</h1></v-row>
+<v-row><v-btn @click="getCart">
+    Teste mich!
+  </v-btn></v-row>
+    <v-row>
+          <v-col
+            v-for="item in cartTest"
+            :key="item.ProduktID"
+            xl="2"
+            lg="6"
+            md="6"
+            sm="6"
+            sx="12"
+            fluid
+          >
+            <v-card
+            v-if="item.Lagerbestand > 1" :disabled="false"
+            elevation="7"
+            outlined>
+              <v-img
+              class="white--text align-end"
+              height="200px"
+              :src="item.LinkGrafikdatei"
+              >
+            </v-img>
+
+            <v-card-title v-text="item.Produkttitel"></v-card-title>
+
+            <v-card-text>
+            <v-row
+              align="center"
+              class="mx-0"
+            >
+              <v-rating
+                :value="5"
+                color="amber"
+                dense
+                half-increments
+                readonly
+                size="14"
+              ></v-rating>
+
+              <div class="grey--text ms-4">
+                {{Math.floor(Math.random() * (5 - 3 + 1) + 3)}} ({{Math.floor(Math.random() * (1000 - 200 + 1) + 200)}})
+              </div>
+            </v-row>
+
+            <div class="my-4 text-subtitle-1">
+              {{item.PreisNetto}} € • Genre: {{item.Genre}}
+            </div>
+            <div class="my-4 text-subtitle-1">
+              SKU: {{item.Produktcode}}
+            </div>
+            <div><b><u>Leseprobe:</u></b></div>
+            <div>{{(item.Kurzinhalt).substring(0,100)}}...</div>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-btn
+                color="green"
+                outlined
+              >
+                Kaufen
+              </v-btn>
+
+              <v-btn
+                color="green lighten-4"
+                text
+                v-on:click="addToCart(item)"
+              >
+                Zum Warenkorb
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+          </v-col>
+    </v-row>
 </template>
 
 <script>
 import axios from 'axios'
-
+import { StripeCheckout } from '@vue-stripe/vue-stripe'
 export default {
   name: 'ProductList',
   data: () => {
@@ -174,11 +259,15 @@ export default {
       counter: 0,
       products: [],
       searchResults: [],
-      selected: []
+      cart: [],
+      chips: [],
+      items: ['Krimi', 'Lehrbuch', 'Fantasy', 'Kalender'],
+      cartTest: []
     }
   },
   mounted: function () {
     this.getProducts()
+    this.fetchCart()
   },
   methods: {
     // Get All Products
@@ -192,10 +281,36 @@ export default {
         console.log(err)
       }
     },
+    async addToCart (item) {
+      const response = await axios.post('http://localhost:5000/save-cart', item)
+      console.log(response.data)
+      this.snackbar = true
+      this.fetchCart()
+    },
+    async getCart () {
+      try {
+        const response = await axios.get('http://localhost:5000/get-cart')
+        this.cartTest = response.data
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    async fetchCart () {
+      try {
+        const response = await axios.get('http://localhost:5000/cart')
+        this.cart = response.data
+      } catch (err) {
+        console.log(err)
+      }
+    },
     search () {
       this.searchResults = this.products.filter(product => {
         return product.Produkttitel.toLowerCase().includes(this.searchQuery.toLowerCase())
       })
+    },
+    remove (item) {
+      this.chips.splice(this.chips.indexOf(item), 1)
+      this.chips = [...this.chips]
     }
   }
 }

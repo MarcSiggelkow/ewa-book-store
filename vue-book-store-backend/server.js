@@ -10,6 +10,8 @@ import morgan from "morgan"
 import session from "express-session"
 // import MySQLStore
 import MySQLStore from 'express-mysql-session';
+// import Cookie-parser
+import cookieParser from "cookie-parser";
 // import dotnet
 import dotenv from 'dotenv';
 // and call config() to configure env vars from .env
@@ -19,6 +21,7 @@ const SESS_TIME = process.env.SESS_LIFETIME
 const IN_PROD = process.env.NODE_ENV === 'production'
 const PORT = process.env.PORT
 const TWO_HOURS = 1000 * 60 * 60 * 2
+const ONE_DAY = 1000 * 60 * 60 * 24;
 
 // init express
 const app = express();
@@ -37,17 +40,8 @@ const options = {
 	expiration: 86400000,
 	// Whether or not to create the sessions database table, if one does not already exist:
 	createDatabaseTable: true,
-    endConnectionOnClose: true,
-	charset: 'utf8mb4_bin',
-    schema: {
-		tableName: 'sessions',
-		columnNames: {
-			session_id: 'session_id',
-			expires: 'expires',
-			data: 'data'
-		}
-	}
   };
+
 
 const sessionStore = new MySQLStore(options, session);
 
@@ -60,31 +54,19 @@ app.use(morgan('default'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(cookieParser());
+
+
 app.use(session({
-    key: process.env.SESS_NAME,
-    secret: process.env.SESS_SECRET,
+    name: 'test-v2',
+    secret: 'keyboard-cat',
     store: sessionStore,
     resave: false,
     saveUninitialized: true,
-    unset: 'destroy',
-    cookie: {
-        httpOnly: true,
-        maxAge: TWO_HOURS,
-        sameSite: true,
-        secure: IN_PROD
-    }
+    cookie: { maxAge: ONE_DAY }
   }));
 
 // use router
 app.use(Router);
 
-app.get('/', (req, res) => {
-    if(!req.session.test) {
-      req.session.test = 'OK';
-      res.send('OK');
-    }
-  });
-  app.get('/test', (req, res) => {
-    res.send(req.session.test); // 'OK'
-  });
 app.listen(PORT, () => console.log('Server running at http://localhost:',PORT));

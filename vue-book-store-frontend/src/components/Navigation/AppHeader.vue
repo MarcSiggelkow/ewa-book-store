@@ -6,9 +6,8 @@
 
       <template v-for="name in items" :key="name.title" >
           <v-btn
-            depressed
             tile
-            plain
+            link
             class="py-8 hidden-sm-and-down"
             :href="name.to"
             >
@@ -19,7 +18,7 @@
       <v-btn icon>
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn icon>
+      <v-btn icon href="/warenkorb">
         <v-icon>mdi-cart</v-icon>
       </v-btn>
       <v-btn icon @click="changeThemeColor">
