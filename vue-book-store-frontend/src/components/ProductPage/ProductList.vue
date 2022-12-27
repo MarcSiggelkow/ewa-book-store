@@ -264,6 +264,7 @@ export default {
   },
   mounted: function () {
     this.getProducts()
+    this.getCart()
   },
   methods: {
     // Get All Products
@@ -284,13 +285,7 @@ export default {
         const response = await axios.post('http://localhost:5000/addCart', product, { withCredentials: true })
         // Initial fill searchResults with input
         this.text = response.Produkttitel + 'zum Warenkorb hinzugefügt'
-        try {
-          const apiCart = await axios.get('http://localhost:5000/getCart', { withCredentials: true })
-          // Initial fill searchResults with input
-          this.cart = apiCart.data
-        } catch (err) {
-          console.log(err)
-        }
+        this.cart = response.data
       } catch (err) {
         console.log(err)
       }

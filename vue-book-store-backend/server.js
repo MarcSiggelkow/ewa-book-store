@@ -13,6 +13,8 @@ import MySQLStore from 'express-mysql-session';
 // import dotnet
 import dotenv from 'dotenv';
 // and call config() to configure env vars from .env
+import cookieSession from 'cookie-session'
+
 dotenv.config();
 
 const SESS_TIME = process.env.SESS_LIFETIME
@@ -52,13 +54,22 @@ const options = {
 const sessionStore = new MySQLStore(options, session);
 
 // use cors
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:8080',  //Your Client, do not write '*'
+  credentials: true,
+};
+app.use(cors(corsOptions));
 // to output request details on the console, store HTTP requests and give concise insight into how app is being used, 
 // and where there could be potential errors or other issues that haven’t yet explored
 app.use(morgan('default'));
  //use express bodyparser to parse JSON bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieSession({
+  secret: 'keyboard-cat',
+  signed: true,
+}));
 
 app.use(session({
     key: process.env.SESS_NAME,
@@ -67,32 +78,15 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        httpOnly: true,
+        secure: true,
         maxAge: TWO_HOURS,
-        sameSite: 'none',
-        secure: IN_PROD
+        sameSite: 'None',
     }
   }));
 
 // use router
 app.use(Router);
-app.set('trust proxy', 1)
-app.post('/api/cart', (req, res) => {
-  // retrieve the productId from the request body
-  const productId = req.body.productId;
-
-  // check if the user has an existing session
-  if (req.session.cart) {
-    // if the user has an existing session, add the product to the shopping cart
-    req.session.cart.push(productId);
-  } else {
-    // if the user does not have an existing session, create a new shopping cart
-    req.session.cart = [productId];
-  }
-
-  // send a response to the client
-  res.send({ success: true });
-});
+app.set('trust proxy', 1);
 
 
 // add to Cart
@@ -109,10 +103,8 @@ app.post('/addCart', (req, res, data) => {
     req.session.cart = [cartItem];
   }
   console.log('Saving Cart');
-  console.log(req)
-
   // send a response to the client
-  res.send({ success: true });
+  res.send(req.session.cart);
 });
 
 // Get Cart
@@ -121,10 +113,7 @@ app.get('/getCart', (req, res) => {
   const cart = req.session.cart || [];
   // send the shopping cart to the client
   console.log('Sending Cart');
-  console.log(req)
-  console.log(req.session.cart);
-  console.log(cart);
-  res.send(cart);
+  res.send(req.session.cart);
 });
 
 
