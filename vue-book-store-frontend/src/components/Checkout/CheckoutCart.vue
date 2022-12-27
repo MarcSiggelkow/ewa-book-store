@@ -1,6 +1,5 @@
 <template>
       <v-navigation-drawer
-        v-model="drawer"
         fixed
         temporary
       >
@@ -10,7 +9,7 @@
       <v-main class="grey lighten-2">
         <v-container>
           <v-row>
-            <template v-for="n in 4" :key="n">
+            <template v-for="n in cart" :key="n.ProduktID">
               <v-col
                 class="mt-2"
                 cols="12"
@@ -33,7 +32,26 @@
   </template>
 
 <script>
+import axios from 'axios'
 export default {
-  data: () => ({ drawer: null })
+  name: 'CheckoutList',
+  data: () => {
+    return {
+      cart: []
+    }
+  },
+  mounted: function () {
+    this.getCart()
+  },
+  methods: {
+    async getCart () {
+      try {
+        const response = await axios.get('http://localhost:5000/getCart', { withCredentials: true })
+        this.cart = response.data
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  }
 }
 </script>

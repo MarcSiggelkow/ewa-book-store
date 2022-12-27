@@ -284,7 +284,7 @@ export default {
       try {
         const response = await axios.post('http://localhost:5000/addCart', product, { withCredentials: true })
         // Initial fill searchResults with input
-        this.text = response.Produkttitel + 'zum Warenkorb hinzugefügt'
+        this.text = product.Produkttitel + 'zum Warenkorb hinzugefügt'
         this.cart = response.data
       } catch (err) {
         console.log(err)

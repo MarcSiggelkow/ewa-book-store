@@ -66,53 +66,57 @@ app.use(morgan('default'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cookieSession({
-  secret: 'keyboard-cat',
-  signed: true,
-}));
 
 app.use(session({
     key: process.env.SESS_NAME,
     secret: process.env.SESS_SECRET,
     store: sessionStore,
-    resave: false,
-    saveUninitialized: false,
+    resave: true,
+    saveUninitialized: true,
     cookie: {
         secure: true,
         maxAge: TWO_HOURS,
-        sameSite: 'None',
+        sameSite: 'none',
     }
   }));
 
 // use router
 app.use(Router);
-app.set('trust proxy', 1);
+
 
 
 // add to Cart
 app.post('/addCart', (req, res, data) => {
+  console.log('*****************Adding Cart*****************');
   // retrieve the productId from the request body
   const cartItem = req.body;
 
   // check if the user has an existing session
   if (req.session.cart) {
     // if the user has an existing session, add the product to the shopping cart
+    res.setHeader('Content-Type', 'text/html')
     req.session.cart.push(cartItem);
   } else {
     // if the user does not have an existing session, create a new shopping cart
     req.session.cart = [cartItem];
   }
-  console.log('Saving Cart');
-  // send a response to the client
-  res.send(req.session.cart);
+  req.session.save(function(err){
+    if (err){
+      throw err;
+    }
+    console.log('Saving Cart');
+    // send a response to the client
+    res.send(req.session.cart);
+  })
 });
 
 // Get Cart
 app.get('/getCart', (req, res) => {
   // retrieve the shopping cart from the session
-  const cart = req.session.cart || [];
+  const cart = req.session || [];
   // send the shopping cart to the client
   console.log('Sending Cart');
+  console.log(req.session.cart);
   res.send(req.session.cart);
 });
 

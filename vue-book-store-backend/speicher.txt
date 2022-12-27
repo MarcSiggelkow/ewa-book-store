@@ -1,0 +1,17 @@
+// add to Cart
+app.post('/addCart', (req, res, data) => {
+  // retrieve the productId from the request body
+  const cartItem = req.body;
+
+  // check if the user has an existing session
+  if (req.session.cart) {
+    // if the user has an existing session, add the product to the shopping cart
+    req.session.cart.push(cartItem);
+  } else {
+    // if the user does not have an existing session, create a new shopping cart
+    req.session.cart = [cartItem];
+  }
+  console.log('Saving Cart');
+  // send a response to the client
+  res.send(req.session.cart);
+});
