@@ -19,7 +19,7 @@
       <v-btn icon>
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn icon>
+      <v-btn to="/checkout" icon>
         <v-icon>mdi-cart</v-icon>
       </v-btn>
       <v-btn icon @click="changeThemeColor">

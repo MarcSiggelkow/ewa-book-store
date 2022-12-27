@@ -65,26 +65,67 @@ app.use(session({
     secret: process.env.SESS_SECRET,
     store: sessionStore,
     resave: false,
-    saveUninitialized: true,
-    unset: 'destroy',
+    saveUninitialized: false,
     cookie: {
         httpOnly: true,
         maxAge: TWO_HOURS,
-        sameSite: true,
+        sameSite: 'none',
         secure: IN_PROD
     }
   }));
 
 // use router
 app.use(Router);
+app.set('trust proxy', 1)
+app.post('/api/cart', (req, res) => {
+  // retrieve the productId from the request body
+  const productId = req.body.productId;
 
-app.get('/', (req, res) => {
-    if(!req.session.test) {
-      req.session.test = 'OK';
-      res.send('OK');
-    }
-  });
-  app.get('/test', (req, res) => {
-    res.send(req.session.test); // 'OK'
-  });
+  // check if the user has an existing session
+  if (req.session.cart) {
+    // if the user has an existing session, add the product to the shopping cart
+    req.session.cart.push(productId);
+  } else {
+    // if the user does not have an existing session, create a new shopping cart
+    req.session.cart = [productId];
+  }
+
+  // send a response to the client
+  res.send({ success: true });
+});
+
+
+// add to Cart
+app.post('/addCart', (req, res, data) => {
+  // retrieve the productId from the request body
+  const cartItem = req.body;
+
+  // check if the user has an existing session
+  if (req.session.cart) {
+    // if the user has an existing session, add the product to the shopping cart
+    req.session.cart.push(cartItem);
+  } else {
+    // if the user does not have an existing session, create a new shopping cart
+    req.session.cart = [cartItem];
+  }
+  console.log('Saving Cart');
+  console.log(req)
+
+  // send a response to the client
+  res.send({ success: true });
+});
+
+// Get Cart
+app.get('/getCart', (req, res) => {
+  // retrieve the shopping cart from the session
+  const cart = req.session.cart || [];
+  // send the shopping cart to the client
+  console.log('Sending Cart');
+  console.log(req)
+  console.log(req.session.cart);
+  console.log(cart);
+  res.send(cart);
+});
+
+
 app.listen(PORT, () => console.log('Server running at http://localhost:',PORT));

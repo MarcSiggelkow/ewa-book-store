@@ -11,8 +11,6 @@ import { showProducts, showRecentlyProducts, showProductById, createProduct, upd
 // init express router
 const router = express.Router();
 
-  
-router.get('/');
 
 // Get All Product
 router.get('/products', showProducts);
