@@ -88,9 +88,10 @@ app.use(Router);
 // add to Cart
 app.post('/addCart', (req, res, data) => {
   console.log('*****************Adding Cart*****************');
+  console.log(req)
   // retrieve the productId from the request body
   const cartItem = req.body;
-
+//test
   // check if the user has an existing session
   if (req.session.cart) {
     // if the user has an existing session, add the product to the shopping cart
@@ -99,19 +100,15 @@ app.post('/addCart', (req, res, data) => {
   } else {
     // if the user does not have an existing session, create a new shopping cart
     req.session.cart = [cartItem];
-  }
-  req.session.save(function(err){
-    if (err){
-      throw err;
-    }
+  };
     console.log('Saving Cart');
     // send a response to the client
     res.send(req.session.cart);
-  })
 });
 
 // Get Cart
 app.get('/getCart', (req, res) => {
+  console.log(req)
   // retrieve the shopping cart from the session
   const cart = req.session || [];
   // send the shopping cart to the client
