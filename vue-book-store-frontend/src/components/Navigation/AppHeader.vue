@@ -19,8 +19,10 @@
       <v-btn icon>
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn to="/checkout" icon>
-        <v-icon>mdi-cart</v-icon>
+      <v-btn to="/checkout" class="text-none" stacked>
+        <v-badge :content="cart.length" color="green">
+          <v-icon>mdi-cart</v-icon>
+        </v-badge>
       </v-btn>
       <v-btn icon @click="changeThemeColor">
         <v-icon>{{
@@ -35,6 +37,7 @@
 export default {
   data () {
     return {
+      cart: [],
       clipped: false,
       drawer: false,
       items: [
@@ -101,7 +104,14 @@ export default {
       ]
     }
   },
+  mounted: function () {
+    this.getCart()
+  },
   methods: {
+    // Get Item out of cart
+    getCart () {
+      this.cart = JSON.parse(localStorage.getItem('cart')) || []
+    },
     changeThemeColor () {
       if (this.$vuetify.theme.dark === true) {
         this.$vuetify.theme.dark = false

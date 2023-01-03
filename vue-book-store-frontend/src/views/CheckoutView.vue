@@ -1,6 +1,5 @@
 <template>
     <Checkout />
-    <Latest />
 </template>
 
 <script>
