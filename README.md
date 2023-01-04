@@ -3,28 +3,30 @@ A Book Ecommerce Store we made during a module in our University HTW - Dresden
 
 # 1. DB setup
 
- 1.1 Setup Xamp mit Apache un d Mysql
-## 1.2 Erstelle Tabelle 'ewa_apl'
-## 1.3 Füge in der DB die 'buecher.sql' aus um die Produkt Bücher Tabelle zu erhalten und Inhalt
+### 1.1 Setup Xamp mit Apache und Mysql
+
+### 1.2 Erstelle Tabelle 'ewa_apl'
+
+### 1.3 Füge in der DB die 'buecher.sql' aus um die Produkt Bücher Tabelle zu erhalten und Inhalt
 
 # 2. vue-book-store-frontend
 
-## 2.1 Project setup | install packages
+### 2.1 Project setup | install packages
 ```
 npm install
 ```
-## 2.2 Client starten
+### 2.2 Client starten
 ```
 npm run server
 ```
 
 # 3. vue-book-store-backend
 
-## 3.1 Project setup
+### 3.1 Project setup
 ```
 npm install
 ```
-## 3.2 Server starten
+### 3.2 Server starten
 ```
 node server.js
 ```
