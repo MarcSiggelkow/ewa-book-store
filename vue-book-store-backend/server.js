@@ -14,6 +14,9 @@ import MySQLStore from 'express-mysql-session';
 import dotenv from 'dotenv';
 // and call config() to configure env vars from .env
 import cookieSession from 'cookie-session'
+// Strip payment
+import Stripe from 'stripe'
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 dotenv.config();
 
@@ -82,8 +85,6 @@ app.use(session({
 
 // use router
 app.use(Router);
-
-
 
 // add to Cart
 app.post('/addCart', (req, res, data) => {

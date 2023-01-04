@@ -88,14 +88,18 @@
             </template>
           </v-table>
           <div class="text-center" v-if="countTotal() !== 0">
-            <v-btn color="green" class="white--text mt-5" outlined>JETZT BESTELLEN</v-btn>
+            <v-btn
+            @click="createPayment()"
+            color="green"
+            class="white--text mt-5"
+            outlined>JETZT BESTELLEN
+          </v-btn>
           </div>
         </v-col>
       </v-sheet>
     </v-col>
   </v-row>
   </template>
-
 <script>
 import axios from 'axios'
 export default {
@@ -109,6 +113,16 @@ export default {
     this.getCart()
   },
   methods: {
+    // Add item to Cart
+    async createPayment () {
+      this.getCart()
+      try {
+        const response = await axios.post('http://localhost:5000/checkout-session', this.cart, { withCredentials: true })
+        window.location.href = response.data.sessionUrl
+      } catch (err) {
+        console.log(err)
+      }
+    },
     addProductLocal (item) {
       this.getCart()
       const existingItem = this.cart.find(i => i.Produktcode === item.Produktcode)
