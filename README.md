@@ -3,7 +3,7 @@ A Book Ecommerce Store we made during a module in our University HTW - Dresden
 
 # 1. DB setup
 
-## 1.1 Setup Xamp mit Apache un d Mysql
+### 1.1 Setup Xamp mit Apache un d Mysql
 ## 1.2 Erstelle Tabelle 'ewa_apl'
 ## 1.3 Füge in der DB die 'buecher.sql' aus um die Produkt Bücher Tabelle zu erhalten und Inhalt
 
