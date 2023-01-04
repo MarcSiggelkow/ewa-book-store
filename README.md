@@ -7,7 +7,7 @@ A Book Ecommerce Store we made during a module in our University HTW - Dresden
 
 ### 1.2 Erstelle Tabelle 'ewa_apl'
 
-### 1.3 Füge in der DB die 'buecher.sql' aus um die Produkt Bücher Tabelle zu erhalten und Inhalt
+### 1.3 Füge in die DB nun die Befehle aus 'buecher.sql' ein um die Produkt Bücher Tabelle zu erhalten und Inhalt
 
 # 2. vue-book-store-frontend
 
@@ -34,7 +34,7 @@ node server.js
 # 4. .env erstellen
 ```
 Innerhalb 'vue-store-backend' befindet sich eine .env-example datei
-Diese kopieren und in ".env" unbennen.
+Diese kopieren und in ".env" umbennen.
 Public und Secret aus Stripe übernehmen um Zahlungen zu erstellen
 ```
-# 5. Client läuft nun auf hhtp:\\localhost:8080 und server auf http:\\localhost:5000
+# 5. Client läuft nun auf http:\\localhost:8080 und server auf http:\\localhost:5000
