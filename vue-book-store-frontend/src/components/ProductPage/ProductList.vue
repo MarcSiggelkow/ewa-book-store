@@ -151,7 +151,9 @@
       v-model="snackbar"
     >
       {{ text }}
-
+      <div>
+        <v-btn>Zum Warenkorb</v-btn>
+      </div>
       <template v-slot:actions>
         <v-btn
           color="pink"
@@ -180,7 +182,8 @@ export default {
       selected: [],
       chips: [],
       items: ['Krimi', 'Kalender', 'Psychothriller', 'Lehrbuch'],
-      cart: []
+      cart: [],
+      soldText: ''
     }
   },
   mounted: function () {
@@ -205,7 +208,7 @@ export default {
       try {
         const response = await axios.post('http://localhost:5000/addCart', product, { withCredentials: true })
         // Initial fill searchResults with input
-        this.text = product.Produkttitel + 'zum Warenkorb hinzugefügt'
+        this.text = product.Produkttitel + ' wurde zum Warenkorb hinzugefügt'
         this.cart = response.data
       } catch (err) {
         console.log(err)
@@ -215,8 +218,12 @@ export default {
       this.getCart()
       const existingItem = this.cart.find(i => i.Produktcode === item.Produktcode)
       if (existingItem) {
-        // Increment quantity of existing item
-        existingItem.quantity++
+        if (existingItem.quantity === (item.quantity1)) {
+          this.soldText = 'Ausverkauft'
+        } else {
+          // Increment quantity of existing item
+          existingItem.quantity++
+        }
       } else {
         // Add new item to cart with quantity 1
         item.quantity = 1
