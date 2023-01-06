@@ -1,6 +1,6 @@
 <template>
   <v-footer
-    color="blue lighten-1"
+    color="green lighten-1"
     padless
   >
     <v-row

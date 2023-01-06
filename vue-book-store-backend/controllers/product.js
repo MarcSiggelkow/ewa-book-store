@@ -1,32 +1,7 @@
 // Import function from Product Model
 
-import { addToCart, getCart, getProducts, getRecentlyProducts, getProductById, insertProduct, updateProductById, deleteProductById } from "../models/productModel.js";
+import { getProducts, getRecentlyProducts, getProductById, insertProduct, updateProductById, deleteProductById } from "../models/productModel.js";
 
-
-// Get All Products
-export const insertCart = (req, res) => {
-
-    const data = req.body;
-    const values = [data.Produktcode, data.Produkttitel, data.Autorname, data.Genre, data.Verlagsname, data.PreisNetto, data.Kurzinhalt, data.LinkGrafikdatei,1];
-
-    addToCart(values, (err, results) => {
-        if (err){
-            res.send(err);
-        }else{
-            res.json(results);
-        }
-    });
-}
-// Get All Products
-export const showCart = (req, res) => {
-    getCart((err, results) => {
-        if (err){
-            res.send(err);
-        }else{
-            res.json(results);
-        }
-    });
-}
 // Get All Products
 export const showProducts = (req, res) => {
     getProducts((err, results) => {

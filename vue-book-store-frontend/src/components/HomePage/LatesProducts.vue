@@ -1,6 +1,7 @@
 <template>
 <v-container>
     <v-row>
+
         <v-card
             class="d-flex align-center justify-center pa-4 mx-auto"
             max-width="550"
@@ -13,7 +14,7 @@
         </v-card>
     </v-row>
     <v-row align="center"
-      justify="center">
+      justify="center">>
           <v-col
             v-for="item in latest"
             :key="item.ProduktID"
@@ -146,7 +147,7 @@ export default {
     // Get All Products
     async getProducts () {
       try {
-        const response = await axios.get('http://localhost:5000/latestproducts')
+        const response = await axios.get('https://ivm108.informatik.htw-dresden.de/ewa/g09/beleg:5000/latestproducts')
         this.latest = response.data
       } catch (err) {
         console.log(err)

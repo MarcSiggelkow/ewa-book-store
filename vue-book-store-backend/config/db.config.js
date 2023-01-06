@@ -1,18 +1,19 @@
 import mysql from "mysql2";
-
+// import dotnet
+import dotenv from 'dotenv';
    
 
 // create the connection to database
 
 const db = mysql.createConnection({
 
-    host: 'localhost',
+    host: process.env.DB_HOST,
 
-    user: 'root',
+    user: process.env.DB_NAME,
 
-    password: '',
+    password: process.env.DB_PASS,
 
-    database: 'ewa_apl'
+    database: process.env.DB_DATABASE
 
 });
 

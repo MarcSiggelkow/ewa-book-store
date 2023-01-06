@@ -2,7 +2,8 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import Contact from '../views/ContactView.vue'
 import Shop from '../views/ShopView.vue'
-import Cart from '../views/CartView.vue'
+import Checkout from '../views/CheckoutView.vue'
+import AboutUs from '../views/AboutView.vue'
 import PageNotFoundView from '@/views/PageNotFoundView.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -14,10 +15,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/about',
     name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
+    component: AboutUs
   },
   {
     path: '/contact',
@@ -30,9 +28,9 @@ const routes: Array<RouteRecordRaw> = [
     component: Shop
   },
   {
-    path: '/warenkorb',
-    name: 'warenkorb',
-    component: Cart
+    path: '/checkout',
+    name: 'Checkout',
+    component: Checkout
   },
   {
     path: '/:catchAll(.*)*',
@@ -42,7 +40,7 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes
 })
 

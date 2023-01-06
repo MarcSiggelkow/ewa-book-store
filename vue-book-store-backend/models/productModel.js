@@ -71,34 +71,5 @@ export const deleteProductById = (id, result) => {
         } else {
             result(null, results);
         }
-    });
-}
-    
-    
-// Shopping Cart Funktions
-export const addToCart = (data, result) => {
-    console.log(data);
-    db.query("INSERT INTO shopping_cart (Produktcode, Produkttitel, Autorname, Genre, Verlagsname, PreisNetto, Kurzinhalt, LinkGrafikdatei, menge) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", data, (err, results) => {             
-        if(err) {
-            console.log("Add_to_cart Request");
-            console.log(err);
-            result(err, null);
-        } else {
-            console.log("Warenkorb aktualisiert")
-            result(null, results);
-        }
-    });
-}
-
-export const getCart = (result) => {
-    console.log("Warenkorb Anfrage from getCart");
-    db.query("SELECT * FROM shopping_cart", (err, results) => {             
-        if(err) {
-            console.log(err);
-            result(err, null);
-        } else {
-            console.log("Warenkorb versendet")
-            result(null, results);
-        }
-    });
+    });   
 }

@@ -10,18 +10,20 @@ import morgan from "morgan"
 import session from "express-session"
 // import MySQLStore
 import MySQLStore from 'express-mysql-session';
-// import Cookie-parser
-import cookieParser from "cookie-parser";
 // import dotnet
 import dotenv from 'dotenv';
 // and call config() to configure env vars from .env
+import cookieSession from 'cookie-session'
+// Strip payment
+import Stripe from 'stripe'
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+
 dotenv.config();
 
 const SESS_TIME = process.env.SESS_LIFETIME
 const IN_PROD = process.env.NODE_ENV === 'production'
-const PORT = process.env.PORT
+const PORT = process.env.DB_PORT
 const TWO_HOURS = 1000 * 60 * 60 * 2
-const ONE_DAY = 1000 * 60 * 60 * 24;
 
 // init express
 const app = express();
@@ -40,13 +42,26 @@ const options = {
 	expiration: 86400000,
 	// Whether or not to create the sessions database table, if one does not already exist:
 	createDatabaseTable: true,
+    endConnectionOnClose: true,
+	charset: 'utf8mb4_bin',
+    schema: {
+		tableName: 'sessions',
+		columnNames: {
+			session_id: 'session_id',
+			expires: 'expires',
+			data: 'data'
+		}
+	}
   };
-
 
 const sessionStore = new MySQLStore(options, session);
 
 // use cors
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:8080',  //Your Client, do not write '*'
+  credentials: true,
+};
+app.use(cors(corsOptions));
 // to output request details on the console, store HTTP requests and give concise insight into how app is being used, 
 // and where there could be potential errors or other issues that haven’t yet explored
 app.use(morgan('default'));
@@ -54,19 +69,54 @@ app.use(morgan('default'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(cookieParser());
-
 
 app.use(session({
-    name: 'test-v2',
-    secret: 'keyboard-cat',
+    key: process.env.SESS_NAME,
+    secret: process.env.SESS_SECRET,
     store: sessionStore,
-    resave: false,
+    resave: true,
     saveUninitialized: true,
-    cookie: { maxAge: ONE_DAY }
+    cookie: {
+        secure: true,
+        maxAge: TWO_HOURS,
+        sameSite: 'none',
+    }
   }));
 
 // use router
 app.use(Router);
 
-app.listen(PORT, () => console.log('Server running at http://localhost:',PORT));
+// add to Cart
+app.post('/addCart', (req, res, data) => {
+  console.log('*****************Adding Cart*****************');
+  console.log(req)
+  // retrieve the productId from the request body
+  const cartItem = req.body;
+//test
+  // check if the user has an existing session
+  if (req.session.cart) {
+    // if the user has an existing session, add the product to the shopping cart
+    res.setHeader('Content-Type', 'text/html')
+    req.session.cart.push(cartItem);
+  } else {
+    // if the user does not have an existing session, create a new shopping cart
+    req.session.cart = [cartItem];
+  };
+    console.log('Saving Cart');
+    // send a response to the client
+    res.send(req.session.cart);
+});
+
+// Get Cart
+app.get('/getCart', (req, res) => {
+  console.log(req)
+  // retrieve the shopping cart from the session
+  const cart = req.session || [];
+  // send the shopping cart to the client
+  console.log('Sending Cart');
+  console.log(req.session.cart);
+  res.send(req.session.cart);
+});
+
+
+app.listen(process.env.DB_PORT, () => console.log('Server running at http://localhost:',process.env.DB_PORT));
