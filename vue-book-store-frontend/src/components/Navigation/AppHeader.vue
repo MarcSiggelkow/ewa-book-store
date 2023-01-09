@@ -2,6 +2,7 @@
   <div>
     <v-app-bar fixed app hide-on-scroll height="64" elevate-on-scroll>
       <v-app-bar-nav-icon class="hidden-md-and-up"/>
+      <v-app-bar-title>Bücher König</v-app-bar-title>
       <v-spacer />
 
       <template v-for="name in items" :key="name.title" >
