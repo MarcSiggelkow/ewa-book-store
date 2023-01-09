@@ -14,7 +14,7 @@
         </v-card>
     </v-row>
     <v-row align="center"
-      justify="center">>
+      justify="center">
           <v-col
             v-for="item in latest"
             :key="item.ProduktID"

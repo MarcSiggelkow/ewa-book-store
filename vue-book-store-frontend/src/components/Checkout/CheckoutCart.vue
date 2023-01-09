@@ -1,5 +1,14 @@
 <template>
-  <v-row no-gutters>
+  <v-row v-if="cart">
+    <div class="d-flex flex-column fill-height justify-center align-center text-white">
+      <v-card title="Dein Warenkorb ist Leer!" text="Schau doch mal in unserem Shop vorbei, dort findest du sicherlich das passende Buch für dich!">
+        <v-card-actions>
+          <v-btn color="green" to="/ewa/g09/beleg/shop">Zum Shop</v-btn>
+        </v-card-actions>
+      </v-card>
+    </div>
+  </v-row>
+  <v-row v-else no-gutters>
     <v-col cols="8">
       <v-sheet class="pa-2 ma-2">
         <v-container>
@@ -60,14 +69,7 @@
           <p class="headline">Bestell Zusammenfassung</p>
           <v-table>
             <template v-slot:default>
-              <tbody
-              v-if="countTotal() == 0">
-              <tr>
-                <td>Dein Warenkorb ist leer</td>
-              </tr>
-              </tbody>
-              <tbody
-              v-else>
+              <tbody>
               <tr>
                 <td>Bestellung Zwischensumme</td>
                 <td class="text-right" style="width: 50px;">{{countTotal().toFixed(2)}}€</td>

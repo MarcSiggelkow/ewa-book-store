@@ -19,7 +19,7 @@
       <v-btn icon>
         <v-icon>mdi-account</v-icon>
       </v-btn>
-      <v-btn to="/checkout" class="text-none" stacked>
+      <v-btn to="/ewa/g09/beleg/checkout" class="text-none" stacked>
         <v-badge :content="cart.length" color="green">
           <v-icon>mdi-cart</v-icon>
         </v-badge>
@@ -44,12 +44,12 @@ export default {
         {
           icon: 'mdi-folder-home-outline',
           title: 'Home',
-          to: '/'
+          to: '/ewa/g09/beleg/'
         },
         {
           icon: 'mdi-account',
           title: 'Über Uns',
-          to: '/about'
+          to: '/ewa/g09/beleg/about'
         },
         {
           icon: 'mdi-cash-usd',
@@ -59,47 +59,17 @@ export default {
         {
           icon: 'mdi-tools',
           title: 'Services',
-          to: '/services',
-          submenu: [
-            {
-              title: 'Services Page',
-              to: '/services'
-            },
-            {
-              title: 'Static Websites',
-              to: '/#'
-            },
-            {
-              title: 'Mobile Applications',
-              to: '/#'
-            },
-            {
-              title: 'Corporate websites',
-              to: '/#'
-            },
-            {
-              title: 'Editorial Sites',
-              to: '/#'
-            },
-            {
-              title: 'Ecommerce and Store',
-              to: '/#'
-            },
-            {
-              title: 'Block Chain Devemopment',
-              to: '/#'
-            }
-          ]
+          to: '/ewa/g09/beleg/services'
         },
         {
           icon: 'mdi-blogger',
           title: 'Blog',
-          to: '/blog'
+          to: '/ewa/g09/beleg/blog'
         },
         {
           icon: 'mdi-contacts',
           title: 'Contact',
-          to: '/contact'
+          to: '/ewa/g09/beleg/contact'
         }
       ]
     }

@@ -152,9 +152,18 @@
     >
       {{ text }}
 
+      <v-btn
+          color="green"
+          variant="text"
+          to="/ewa/g09/beleg/checkout"
+          @click="snackbar = false"
+        >
+          Zum Warenkorb
+        </v-btn>
+
       <template v-slot:actions>
         <v-btn
-          color="pink"
+          color="green"
           variant="text"
           @click="snackbar = false"
         >
@@ -205,7 +214,7 @@ export default {
       try {
         const response = await axios.post('https://ivm108.informatik.htw-dresden.de/ewa/g09/beleg:5000/addCart', product, { withCredentials: true })
         // Initial fill searchResults with input
-        this.text = product.Produkttitel + 'zum Warenkorb hinzugefügt'
+        this.text = product.Produkttitel + ' zum Warenkorb hinzugefügt'
         this.cart = response.data
       } catch (err) {
         console.log(err)

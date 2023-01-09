@@ -1,4 +1,0 @@
-AuthType Basic
-AuthName "Zugriffskontrolle"
-AuthUserFile c:\xampp22\htdocs\ewa\g09\conf\.htpasswd
-Require valid-user
