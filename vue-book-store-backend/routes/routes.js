@@ -4,8 +4,8 @@ import express from "express";
 import dotenv from 'dotenv';
 dotenv.config({ path: '../.env' });
 import Stripe from 'stripe'
-//const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-const stripe = Stripe('sk_test_51MGPh3HC60zm15t9R1uG5MQjJUMqjKI8O6DJLQS3QgFQGtAvsZZZL83Va7C4o6iiiSr4VgTyxnGFgeRlBm2w84e500KaqdrvNT');
+
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 // import function from controller
 import { showProducts, showRecentlyProducts, showProductById, createProduct, updateProduct, deleteProduct } from "../controllers/product.js";
