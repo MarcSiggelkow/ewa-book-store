@@ -126,9 +126,16 @@ export default {
   methods: {
     // Add item to Cart
     async createPayment () {
-      const cart = this.getCart()
+      const data = localStorage.getItem('cart')
+
+      // set headers
+      const config = {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
       try {
-        const response = await axios.post('http://ivm108.informatik.htw-dresden.de/ewa/g09/beleg/payment.php', (cart))
+        await axios.post('http://ivm108.informatik.htw-dresden.de/ewa/g09/beleg/payment.php', data, config)
       } catch (err) {
         console.log(err)
       }
