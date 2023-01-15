@@ -22,7 +22,6 @@ dotenv.config();
 
 const SESS_TIME = process.env.SESS_LIFETIME
 const IN_PROD = process.env.NODE_ENV === 'production'
-const PORT = process.env.DB_PORT
 const TWO_HOURS = 1000 * 60 * 60 * 2
 
 // init express
@@ -56,11 +55,6 @@ const options = {
 
 const sessionStore = new MySQLStore(options, session);
 
-// use cors
-const corsOptions = {
-  origin: 'http://localhost:8080',  //Your Client, do not write '*'
-  credentials: true,
-};
 app.use(cors(corsOptions));
 // to output request details on the console, store HTTP requests and give concise insight into how app is being used, 
 // and where there could be potential errors or other issues that haven’t yet explored

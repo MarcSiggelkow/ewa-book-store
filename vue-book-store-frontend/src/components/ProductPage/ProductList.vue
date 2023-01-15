@@ -200,10 +200,9 @@ export default {
     // Get All Products
     async getProducts () {
       try {
-        const response = await axios.get('https://ivm108.informatik.htw-dresden.de/ewa/g09/beleg:5000/products')
+        const response = await axios.get('http://ivm108.informatik.htw-dresden.de/ewa/g09/beleg/get.php')
         this.products = response.data
-        // Initial fill searchResults with input
-        this.searchResults = this.products
+        this.searchResults = response.data
       } catch (err) {
         console.log(err)
       }
@@ -212,7 +211,7 @@ export default {
     // Add item to Cart
     async addProduct (product) {
       try {
-        const response = await axios.post('https://ivm108.informatik.htw-dresden.de/ewa/g09/beleg:5000/addCart', product, { withCredentials: true })
+        const response = await axios.post('http://ivm108.informatik.htw-dresden.de/ewa/g09/beleg:5000/addCart', product)
         // Initial fill searchResults with input
         this.text = product.Produkttitel + ' zum Warenkorb hinzugefügt'
         this.cart = response.data
