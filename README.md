@@ -1,5 +1,8 @@
 # ewa-book-store
 A Book Ecommerce Store we made during a module in our University HTW - Dresden
+Running example under:
+* http://ivm108.informatik.htw-dresden.de/ewa/g09/beleg/
+NOTE: This project is not finished yet!
 
 # 1. DB setup
 
