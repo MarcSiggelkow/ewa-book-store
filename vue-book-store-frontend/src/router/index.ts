@@ -8,32 +8,32 @@ import PageNotFoundView from '@/views/PageNotFoundView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/ewa/g09/beleg//',
+    path: '/ewa/g09/beleg/',
     name: 'home',
     component: HomeView
   },
   {
-    path: '/ewa/g09/beleg//about',
+    path: '/ewa/g09/beleg/about',
     name: 'about',
     component: AboutUs
   },
   {
-    path: '/ewa/g09/beleg//contact',
+    path: '/ewa/g09/beleg/contact',
     name: 'Contact',
     component: Contact
   },
   {
-    path: '/ewa/g09/beleg//shop',
+    path: '/ewa/g09/beleg/shop',
     name: 'Shop',
     component: Shop
   },
   {
-    path: '/ewa/g09/beleg//checkout',
+    path: '/ewa/g09/beleg/checkout',
     name: 'Checkout',
     component: Checkout
   },
   {
-    path: '/ewa/g09/beleg//:catchAll(.*)*',
+    path: '/ewa/g09/beleg/:catchAll(.*)*',
     name: 'PageNotFound',
     component: PageNotFoundView
   }

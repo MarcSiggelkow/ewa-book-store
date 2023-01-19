@@ -43,22 +43,29 @@
                   <td>{{item.PreisNetto}}€</td>
                   <td>{{item.Mwstsatz}}%</td>
                   <td>{{item.quantity}}</td>
-                  <td>{{(item.PreisNetto * item.quantity).toFixed(2)}}</td>
+                  <td>{{(item.PreisNetto * item.quantity).toFixed(2)}}€</td>
                   <td>{{((item.PreisNetto * item.quantity) * ((item.Mwstsatz/100) + 1)).toFixed(2)}}€</td>
-                  <td><v-btn
+                  <td v-if="item.quantity >= item.Lagerbestand">
+                    Kein Bestand
+                  </td>
+                  <td v-else>
+                    <v-btn
                     color="green"
                     outlined
                     @click="addProductLocal(item)"
                   >
                     +
-                  </v-btn></td>
-                  <td><v-btn
-                    color="green"
-                    text
-                    @click="removeItem(item)"
-                  >
-                    -
-                  </v-btn></td>
+                  </v-btn>
+                  </td>
+                  <td>
+                    <v-btn
+                      color="green"
+                      text
+                      @click="removeItem(item)"
+                    >
+                      -
+                    </v-btn>
+                  </td>
                   <td><v-btn
                     color="red"
                     text
@@ -126,7 +133,7 @@ export default {
   methods: {
     // Add item to Cart
     async createPayment () {
-      const data = localStorage.getItem('cart')
+      const items = localStorage.getItem('cart')
 
       // set headers
       const config = {
@@ -135,7 +142,10 @@ export default {
         }
       }
       try {
-        await axios.post('http://ivm108.informatik.htw-dresden.de/ewa/g09/beleg/payment.php', data, config)
+        const response = await axios.post('http://ivm108.informatik.htw-dresden.de/ewa/g09/beleg/payment.php', items, config)
+        sessionStorage.setItem('payment', JSON.stringify(response.data))
+        localStorage.clear()
+        window.location.href = response.data.sessionUrl
       } catch (err) {
         console.log(err)
       }
